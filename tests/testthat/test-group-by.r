@@ -523,15 +523,12 @@ test_that("implicit mutate() operates on ungrouped data (#5598)", {
 # Errors ------------------------------------------------------------------
 
 test_that("group_by() and ungroup() give meaningful error messages", {
-  verify_output(test_path("test-group-by-errors.txt"), {
-    df <- tibble(x = 1, y = 2)
+  df <- tibble(x = 1, y = 2)
 
-    df %>% group_by(unknown)
+  expect_snapshot_error(df %>% group_by(unknown))
+  expect_snapshot_error(df %>% ungroup(x))
+  expect_snapshot_error(df %>% group_by(x, y) %>% ungroup(z))
 
-    df %>% ungroup(x)
-    df %>% group_by(x, y) %>% ungroup(z)
-
-    df %>% group_by(z = a + 1)
-  })
+  expect_snapshot_error(df %>% group_by(z = a + 1))
 })
 
